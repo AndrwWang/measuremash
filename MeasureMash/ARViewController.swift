@@ -8,12 +8,13 @@
 import UIKit
 import RealityKit
 
-class ViewController: UIViewController {
+class ARViewController: UIViewController {
     
-    @IBOutlet var arView: ARView!
+    @IBOutlet weak var arView: ARView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         
         // Load the "Box" scene from the "Experience" Reality File
         let boxAnchor = try! Experience.loadBox()
