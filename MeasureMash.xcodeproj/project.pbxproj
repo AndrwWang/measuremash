@@ -16,6 +16,8 @@
 		01A55DBF29E0FB22008B5A04 /* MeasureMashTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A55DBE29E0FB22008B5A04 /* MeasureMashTests.swift */; };
 		01A55DC929E0FB22008B5A04 /* MeasureMashUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A55DC829E0FB22008B5A04 /* MeasureMashUITests.swift */; };
 		01A55DCB29E0FB22008B5A04 /* MeasureMashUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A55DCA29E0FB22008B5A04 /* MeasureMashUITestsLaunchTests.swift */; };
+		C283043F29E1041A00F4C83A /* FontExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C283043E29E1041900F4C83A /* FontExtension.swift */; };
+		C283044129E105FE00F4C83A /* Baloo-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C283043D29E100F600F4C83A /* Baloo-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +50,9 @@
 		01A55DC429E0FB22008B5A04 /* MeasureMashUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MeasureMashUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		01A55DC829E0FB22008B5A04 /* MeasureMashUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasureMashUITests.swift; sourceTree = "<group>"; };
 		01A55DCA29E0FB22008B5A04 /* MeasureMashUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasureMashUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		C283043D29E100F600F4C83A /* Baloo-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Baloo-Regular.ttf"; sourceTree = "<group>"; };
+		C283043E29E1041900F4C83A /* FontExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontExtension.swift; sourceTree = "<group>"; };
+		C283044029E1051100F4C83A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +103,9 @@
 		01A55DA729E0FB1F008B5A04 /* MeasureMash */ = {
 			isa = PBXGroup;
 			children = (
+				C283044029E1051100F4C83A /* Info.plist */,
+				C283043D29E100F600F4C83A /* Baloo-Regular.ttf */,
+				C283043E29E1041900F4C83A /* FontExtension.swift */,
 				01A55DA829E0FB1F008B5A04 /* AppDelegate.swift */,
 				01A55DAA29E0FB1F008B5A04 /* ViewController.swift */,
 				01A55DAC29E0FB1F008B5A04 /* Experience.rcproject */,
@@ -230,6 +238,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				01A55DB529E0FB22008B5A04 /* LaunchScreen.storyboard in Resources */,
+				C283044129E105FE00F4C83A /* Baloo-Regular.ttf in Resources */,
 				01A55DB229E0FB22008B5A04 /* Assets.xcassets in Resources */,
 				01A55DB029E0FB1F008B5A04 /* Main.storyboard in Resources */,
 			);
@@ -258,6 +267,7 @@
 			files = (
 				01A55DAB29E0FB1F008B5A04 /* ViewController.swift in Sources */,
 				01A55DA929E0FB1F008B5A04 /* AppDelegate.swift in Sources */,
+				C283043F29E1041A00F4C83A /* FontExtension.swift in Sources */,
 				01A55DAD29E0FB1F008B5A04 /* Experience.rcproject in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -435,8 +445,9 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 8338KM8722;
+				DEVELOPMENT_TEAM = EMR65N9MP5;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MeasureMash/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -445,6 +456,7 @@
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -465,8 +477,9 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 8338KM8722;
+				DEVELOPMENT_TEAM = EMR65N9MP5;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MeasureMash/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -475,6 +488,7 @@
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
