@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		01A55DA929E0FB1F008B5A04 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A55DA829E0FB1F008B5A04 /* AppDelegate.swift */; };
 		01A55DAB29E0FB1F008B5A04 /* ARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A55DAA29E0FB1F008B5A04 /* ARViewController.swift */; };
-		01A55DAD29E0FB1F008B5A04 /* Experience.rcproject in Sources */ = {isa = PBXBuildFile; fileRef = 01A55DAC29E0FB1F008B5A04 /* Experience.rcproject */; };
 		01A55DB029E0FB1F008B5A04 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 01A55DAE29E0FB1F008B5A04 /* Main.storyboard */; };
 		01A55DB229E0FB22008B5A04 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 01A55DB129E0FB22008B5A04 /* Assets.xcassets */; };
 		01A55DB529E0FB22008B5A04 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 01A55DB329E0FB22008B5A04 /* LaunchScreen.storyboard */; };
@@ -21,7 +20,6 @@
 		C283044129E105FE00F4C83A /* Baloo-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C283043D29E100F600F4C83A /* Baloo-Regular.ttf */; };
 		C283044529E1098500F4C83A /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C283044429E1098500F4C83A /* UIColorExtension.swift */; };
 		C283044729E10AB800F4C83A /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C283044629E10AB800F4C83A /* WelcomeViewController.swift */; };
-		C283044929E10B0C00F4C83A /* tempLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = C283044829E10B0C00F4C83A /* tempLogo.png */; };
 		C283044B29E10BE000F4C83A /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = C283044A29E10BE000F4C83A /* Theme.swift */; };
 		C283044F29E1114B00F4C83A /* UILabelExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C283044E29E1114B00F4C83A /* UILabelExtension.swift */; };
 		C283045229E115DB00F4C83A /* UIButtonExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C283045129E115DB00F4C83A /* UIButtonExtension.swift */; };
@@ -49,7 +47,6 @@
 		01A55DA529E0FB1F008B5A04 /* MeasureMash.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MeasureMash.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		01A55DA829E0FB1F008B5A04 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		01A55DAA29E0FB1F008B5A04 /* ARViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewController.swift; sourceTree = "<group>"; };
-		01A55DAC29E0FB1F008B5A04 /* Experience.rcproject */ = {isa = PBXFileReference; lastKnownFileType = file.rcproject; path = Experience.rcproject; sourceTree = "<group>"; };
 		01A55DAF29E0FB1F008B5A04 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		01A55DB129E0FB22008B5A04 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		01A55DB429E0FB22008B5A04 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -64,7 +61,6 @@
 		C283044029E1051100F4C83A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		C283044429E1098500F4C83A /* UIColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorExtension.swift; sourceTree = "<group>"; };
 		C283044629E10AB800F4C83A /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
-		C283044829E10B0C00F4C83A /* tempLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tempLogo.png; sourceTree = "<group>"; };
 		C283044A29E10BE000F4C83A /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		C283044E29E1114B00F4C83A /* UILabelExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILabelExtension.swift; sourceTree = "<group>"; };
 		C283045129E115DB00F4C83A /* UIButtonExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButtonExtension.swift; sourceTree = "<group>"; };
@@ -119,14 +115,12 @@
 		01A55DA729E0FB1F008B5A04 /* MeasureMash */ = {
 			isa = PBXGroup;
 			children = (
-				C283044829E10B0C00F4C83A /* tempLogo.png */,
 				C283043D29E100F600F4C83A /* Baloo-Regular.ttf */,
 				C283044D29E1111A00F4C83A /* helpers */,
 				01A55DA829E0FB1F008B5A04 /* AppDelegate.swift */,
 				C283044629E10AB800F4C83A /* WelcomeViewController.swift */,
 				01A55DAA29E0FB1F008B5A04 /* ARViewController.swift */,
 				C2C02D3129E13C530093D565 /* OverlayView.swift */,
-				01A55DAC29E0FB1F008B5A04 /* Experience.rcproject */,
 				01A55DAE29E0FB1F008B5A04 /* Main.storyboard */,
 				01A55DD729E121A4008B5A04 /* CatalogViewController.swift */,
 				01A55DB329E0FB22008B5A04 /* LaunchScreen.storyboard */,
@@ -271,7 +265,6 @@
 			files = (
 				01A55DB529E0FB22008B5A04 /* LaunchScreen.storyboard in Resources */,
 				C283044129E105FE00F4C83A /* Baloo-Regular.ttf in Resources */,
-				C283044929E10B0C00F4C83A /* tempLogo.png in Resources */,
 				01A55DB229E0FB22008B5A04 /* Assets.xcassets in Resources */,
 				01A55DB029E0FB1F008B5A04 /* Main.storyboard in Resources */,
 			);
@@ -305,7 +298,6 @@
 				C283044729E10AB800F4C83A /* WelcomeViewController.swift in Sources */,
 				C283044F29E1114B00F4C83A /* UILabelExtension.swift in Sources */,
 				C283045229E115DB00F4C83A /* UIButtonExtension.swift in Sources */,
-				01A55DAD29E0FB1F008B5A04 /* Experience.rcproject in Sources */,
 				C283044529E1098500F4C83A /* UIColorExtension.swift in Sources */,
 				C283044B29E10BE000F4C83A /* Theme.swift in Sources */,
 				C2C02D3229E13C530093D565 /* OverlayView.swift in Sources */,

@@ -55,7 +55,7 @@ class ARViewController: UIViewController, ARSessionDelegate {
         //get the coordinates of the tap
         let location = recognizer.location(in: view)
         print(location)
-        if let img = screenshot(captureRect: CGRect(x: location.x - 50, y: location.y - 50, width: 100, height: 100)).cgImage {
+        if let img = screenshot(captureRect: CGRect(x: location.x - 100, y: location.y - 100, width: 200, height: 200)).cgImage {
             let referenceImage = ARReferenceImage(img, orientation: .up, physicalWidth: 0.4)
             referenceImage.validate(completionHandler: { res in
                 if (res != nil) { // reference image not high quality enough to be tracked

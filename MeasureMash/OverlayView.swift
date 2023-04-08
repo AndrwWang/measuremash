@@ -29,6 +29,10 @@ class OverlayView: UIView {
         for p in points {
             drawDot(location: p)
         }
+        
+        if points.count == 2 {
+            drawLine(start: points[0], toPoint: points[1])
+        }
     }
     
     private func drawDot(location: CGPoint) {
@@ -41,5 +45,18 @@ class OverlayView: UIView {
         pointLayer.lineWidth = 1.0
         pointLayer.strokeColor = UIColor.white.cgColor
         layer.addSublayer(pointLayer)
+    }
+    
+    private func drawLine(start: CGPoint, toPoint end: CGPoint) {
+        let path = UIBezierPath()
+        path.move(to: start)
+        path.addLine(to: end)
+        
+        let shapeLayer = CAShapeLayer()
+        shapeLayer.path = path.cgPath
+        shapeLayer.strokeColor = UIColor.white.cgColor
+        shapeLayer.lineWidth = 2.0
+        
+        layer.addSublayer(shapeLayer)
     }
 }
