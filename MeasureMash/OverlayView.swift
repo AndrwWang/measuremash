@@ -8,34 +8,38 @@
 import UIKit
 
 class OverlayView: UIView {
-    private var drawOnce = false
-    var location: CGPoint = CGPoint(x: 0, y: 0) {
+    var points: [CGPoint] = [] {
         didSet {
-            drawOnce = true
+            if points.count > 2 {
+                points.remove(at: 0)
+            }
             setNeedsDisplay()
         }
     }
     
     override func draw(_ rect: CGRect) {
         super.draw(rect)
-
-        // remove previous drawings
-        if drawOnce {
-            guard let sublayers = layer.sublayers else { return }
+        
+        if let sublayers = layer.sublayers {
             for layer in sublayers {
                 layer.removeFromSuperlayer()
             }
         }
         
-        // draw point
-        let dotRadius: CGFloat = 5.0
+        for p in points {
+            drawDot(location: p)
+        }
+    }
+    
+    private func drawDot(location: CGPoint) {
+        let dotRadius: CGFloat = 10.0
         let dotRect = CGRect(x: location.x - dotRadius, y: location.y - dotRadius, width: dotRadius * 2, height: dotRadius * 2)
         
         let pointLayer = CAShapeLayer()
         let dotPath = UIBezierPath(ovalIn: dotRect)
         pointLayer.path = dotPath.cgPath
         pointLayer.lineWidth = 1.0
-        pointLayer.strokeColor = UIColor.black.cgColor
+        pointLayer.strokeColor = UIColor.white.cgColor
         layer.addSublayer(pointLayer)
     }
 }
