@@ -14,6 +14,7 @@ class DistanceViewController: UIViewController, UITextFieldDelegate {
     var unitsLabel: UILabel!
     var unitsButton: UIButton!
     var confirmButton: UIButton!
+    var cancelButton: UIButton!
     
     var popoverHeight: CGFloat = -1
     var popoverWidth: CGFloat = -1
@@ -70,7 +71,7 @@ class DistanceViewController: UIViewController, UITextFieldDelegate {
         
         confirmButton = UIButton()
         let confirm = NSAttributedString(string: "confirm",
-                                         attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: popoverHeight / 10),
+                                         attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: popoverHeight / 12),
                                                       NSAttributedString.Key.foregroundColor : UIColor.black])
         confirmButton.setAttributedTitle(confirm, for: .normal)
         confirmButton.setBackgroundColor(color: Theme.PINK!, forState: .normal)
@@ -80,11 +81,23 @@ class DistanceViewController: UIViewController, UITextFieldDelegate {
         confirmButton.isEnabled = false
         view.addSubview(confirmButton)
         
+        cancelButton = UIButton()
+        let cancel = NSAttributedString(string: "cancel",
+                                         attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: popoverHeight / 12),
+                                                      NSAttributedString.Key.foregroundColor : UIColor.black])
+        cancelButton.setAttributedTitle(cancel, for: .normal)
+        cancelButton.setBackgroundColor(color: Theme.PINK!, forState: .normal)
+        cancelButton.titleLabel!.textAlignment = .center
+        cancelButton.layer.cornerRadius = 15
+        cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
+        view.addSubview(cancelButton)
+        
         distanceLabel.translatesAutoresizingMaskIntoConstraints = false
         distanceTextField.translatesAutoresizingMaskIntoConstraints = false
         unitsLabel.translatesAutoresizingMaskIntoConstraints = false
         unitsButton.translatesAutoresizingMaskIntoConstraints = false
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
+        cancelButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             distanceLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
             distanceLabel.rightAnchor.constraint(equalTo: view.centerXAnchor, constant: -5),
@@ -100,9 +113,12 @@ class DistanceViewController: UIViewController, UITextFieldDelegate {
             unitsButton.bottomAnchor.constraint(equalTo: unitsLabel.bottomAnchor, constant: -5),
             unitsButton.leftAnchor.constraint(equalTo: view.centerXAnchor, constant: 5),
             unitsButton.widthAnchor.constraint(equalToConstant: popoverWidth / 4),
-            confirmButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            confirmButton.widthAnchor.constraint(equalToConstant: popoverWidth / 2),
-            confirmButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10)
+            confirmButton.leftAnchor.constraint(equalTo: view.centerXAnchor, constant: 10),
+            confirmButton.widthAnchor.constraint(equalToConstant: popoverWidth / 3),
+            confirmButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10),
+            cancelButton.rightAnchor.constraint(equalTo: view.centerXAnchor, constant: -10),
+            cancelButton.widthAnchor.constraint(equalToConstant: popoverWidth / 3),
+            cancelButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10)
         ])
     }
     
@@ -132,7 +148,12 @@ class DistanceViewController: UIViewController, UITextFieldDelegate {
     }
     
     @objc func confirmButtonTapped() {
-        self.delegate?.distancePopoverDismissed(distance: distance, units: units)
+        delegate?.distancePopoverDismissed(distance: distance, units: units)
+        dismiss(animated: true)
+    }
+    
+    @objc func cancelButtonTapped() {
+        delegate?.distancePopoverDismissed(distance: delegate!.displayDistance, units: delegate!.units)
         dismiss(animated: true)
     }
     

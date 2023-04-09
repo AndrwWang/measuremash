@@ -23,10 +23,10 @@ class ARViewController: UIViewController, ARSessionDelegate, UIPopoverPresentati
     private var chooseButton: UIButton!
     
     private var object = Objects.pairs[0]
-    private var displayDistance: Double = 0.1
+    var displayDistance: Double = 0.1
     private var distanceInMeters: Double = 0.1
     private var numFit = 0
-    private var units: Objects.UNIT = .meters
+    var units: Objects.UNIT = .meters
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -192,6 +192,7 @@ class ARViewController: UIViewController, ARSessionDelegate, UIPopoverPresentati
             
             vc.modalTransitionStyle   = .coverVertical
             vc.modalPresentationStyle = .popover
+            vc.isModalInPresentation = true
             vc.popoverPresentationController?.sourceView = self.view
             vc.popoverPresentationController?.sourceRect =
             CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
@@ -220,9 +221,11 @@ class ARViewController: UIViewController, ARSessionDelegate, UIPopoverPresentati
         }
         
         self.distanceInMeters = computedDistance
+        self.displayDistance = distance
         self.units = units
         
         updateDistanceLabel()
+        updateObjectsLabel()
         
         arView.session.run(configuration)
     }
@@ -258,7 +261,7 @@ class ARViewController: UIViewController, ARSessionDelegate, UIPopoverPresentati
     @objc func chooseButtonTapped() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "CatalogViewController") as! CatalogViewController
-
+        
         navigationController!.pushViewController(vc, animated: true)
     }
     
@@ -317,12 +320,12 @@ class ARViewController: UIViewController, ARSessionDelegate, UIPopoverPresentati
                                         fileExtension: String,
                                         sceneName: String,
                                         completion: @escaping (Swift.Result<(Entity & HasAnchoring)?, Swift.Error>) -> Void) {
-
+        
         guard let realityFileSceneURL = createRealityURL(filename: filename, fileExtension: fileExtension, sceneName: sceneName) else {
             print("Error: Unable to find specified file in application bundle")
             return
         }
-
+        
         let loadRequest = Entity.loadAnchorAsync(contentsOf: realityFileSceneURL)
         let cancellable = loadRequest.sink(receiveCompletion: { (loadCompletion) in
             if case let .failure(error) = loadCompletion {
@@ -347,7 +350,7 @@ class ARViewController: UIViewController, ARSessionDelegate, UIPopoverPresentati
                 for m in mashAnchors { arView.session.remove(anchor: m) }
                 
                 var bounds = entity!.visualBounds(relativeTo: .none)
-
+                
                 var current = startAnchor.transform.columns.3
                 var end = endAnchor.transform.columns.3
                 
@@ -357,7 +360,6 @@ class ARViewController: UIViewController, ARSessionDelegate, UIPopoverPresentati
                     current = end
                     end = temp
                 }
-                print("old width: \(bounds.max.x - bounds.min.x)")
                 
                 //scale the object
                 let objectToLineRatio = (object.length / 100) / distanceInMeters
@@ -365,22 +367,23 @@ class ARViewController: UIViewController, ARSessionDelegate, UIPopoverPresentati
                 let scale = idealObjectWidth / Double(bounds.max.x - bounds.min.x)
                 entity!.transform.scale *= Float(scale)
                 
+                print(angle)
+
                 //get rotation matrix
                 var newTransform = SCNMatrix4(startAnchor.transform)
                 let angleInRadians = Float(angle) * Float.pi / 180
                 let rotation = SCNMatrix4MakeRotation(angleInRadians, 0, 0, 1)
                 newTransform = SCNMatrix4Mult(newTransform, rotation)
-
+                
                 //calculate rotated width and height
                 bounds = entity!.visualBounds(relativeTo: .none)
                 let width = (bounds.max.x - bounds.min.x) * (cos(angleInRadians))
                 let height = (bounds.max.x - bounds.min.x) * (sin(angleInRadians))
-                print("new width: \(width)")
-                print("new height: \(height)")
-                
                 
                 current.x += width / 2
                 current.y += height / 2
+
+                print(angle)
                 mashAnchors = []
                 while current.x < end.x {
                     var simdTransform = simd_float4x4(newTransform)
@@ -410,17 +413,18 @@ class ARViewController: UIViewController, ARSessionDelegate, UIPopoverPresentati
     
     private func pointPairToBearingDegrees(startingPoint: CGPoint, secondPoint endingPoint: CGPoint) -> CGFloat {
         var start = CGPoint(x: startingPoint.x, y: startingPoint.y)
-         var end = CGPoint(x: endingPoint.x, y: endingPoint.y)
-         
-         if startingPoint.x > endingPoint.x {
-         // swap starting an ending points if wrong order
-         let temp: CGPoint = CGPoint(x: start.x, y: start.y)
-         start.x = end.x
-         start.y = end.y
-         end.x = temp.x
-         end.y = temp.y
-         }
+        var end = CGPoint(x: endingPoint.x, y: endingPoint.y)
         
+        
+        if startingPoint.y < endingPoint.y {
+            // swap starting an ending points if wrong order
+            let temp = start
+            start = end
+            end = temp
+        }
+        
+        print("start: \(start)")
+        print("end: \(end)")
         let originPoint = CGPoint(x: end.x - start.x, y: end.y - start.y)
         let bearingRadians = atan2f(Float(originPoint.y), Float(originPoint.x))
         var bearingDegrees = bearingRadians * (180.0 / .pi)
@@ -451,7 +455,7 @@ class ARViewController: UIViewController, ARSessionDelegate, UIPopoverPresentati
             overlayView.points.append(t)
         }
         
-        if overlayView.points.count == 2 && delay % 30 == 0 {
+        if overlayView.points.count == 2 && !((overlayView.points[0].x - overlayView.points[1].x) < 0.001 && (overlayView.points[0].y - overlayView.points[1].y) < 0.001) && delay % 30 == 0 {
             let degrees = pointPairToBearingDegrees(startingPoint: overlayView.points[0], secondPoint: overlayView.points[1])
             var finalAngle = Double(degrees.remainder(dividingBy: 180))
             if Int(degrees) / 180 > 0 {
