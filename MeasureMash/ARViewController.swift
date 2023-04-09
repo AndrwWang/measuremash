@@ -15,7 +15,7 @@ class ARViewController: UIViewController, ARSessionDelegate, UIPopoverPresentati
     
     @IBOutlet weak var arView: ARView!
     private var overlayView: OverlayView!
-    private var configuration: ARImageTrackingConfiguration!
+    private var configuration = ARImageTrackingConfiguration()
     
     private var morePointsLabel: UILabel!
     private var distanceButton: UIButton!
@@ -31,11 +31,36 @@ class ARViewController: UIViewController, ARSessionDelegate, UIPopoverPresentati
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = Theme.DARK_BLUE
-        
+        configuration.maximumNumberOfTrackedImages = 2
+        setupResetButton()
         setupARView()
         setupOverlayView()
         configureBottomView()
         updateBottomView()
+    }
+    
+    func setupResetButton() {
+        
+        let resetButton = UIButton()
+        resetButton.setTitle("Reset", for: .normal)
+        
+        resetButton.setBackgroundColor(color: Theme.PINK!, forState: .normal)
+        resetButton.layer.cornerRadius = 15
+        
+        resetButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
+        resetButton.widthAnchor.constraint(equalToConstant: Theme.SCREEN_WIDTH / 5).isActive = true
+        resetButton.heightAnchor.constraint(equalToConstant: Theme.SCREEN_WIDTH / 12).isActive = true
+        resetButton.addTarget(self, action: #selector(resetButtonTapped), for: .touchUpInside)
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: resetButton)
+    }
+    
+    @objc func resetButtonTapped() {
+        overlayView.points.removeAll()
+        refImages.removeAll()
+        mashAnchors.removeAll()
+        configuration.trackingImages.removeAll()
+        arView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking, .resetSceneReconstruction])
     }
     
     func setupARView() {
@@ -284,10 +309,6 @@ class ARViewController: UIViewController, ARSessionDelegate, UIPopoverPresentati
                     print("bad image")
                     return
                 }
-                if self.configuration == nil {
-                    self.configuration = ARImageTrackingConfiguration()
-                    self.configuration.maximumNumberOfTrackedImages = 2
-                }
                 
                 if self.refImages.count >= 2 {
                     self.refImages.remove(at: 0)
@@ -342,11 +363,6 @@ class ARViewController: UIViewController, ARSessionDelegate, UIPopoverPresentati
     
     var mashAnchors: [ARAnchor] = []
     func measureMash(anchor1 startAnchor: ARAnchor, anchor2 endAnchor: ARAnchor, angle: CGFloat, distanceInMeters: Double) {
-        guard let realitySceneURL = createRealityURL(filename: "Mash",
-                                                     fileExtension: "reality",
-                                                     sceneName: object.name) else {
-            return
-        }
         loadRealityComposerSceneAsync(filename: "Mash", fileExtension: "reality", sceneName: object.name, completion: { [self] result in
             switch result {
             case .success(let entity):
@@ -370,8 +386,6 @@ class ARViewController: UIViewController, ARSessionDelegate, UIPopoverPresentati
                 let scale = idealObjectWidth / Double(bounds.max.x - bounds.min.x)
                 entity!.transform.scale *= Float(scale)
                 
-                print(angle)
-
                 //get rotation matrix
                 var newTransform = SCNMatrix4(startAnchor.transform)
                 let angleInRadians = Float(angle) * Float.pi / 180
@@ -386,9 +400,8 @@ class ARViewController: UIViewController, ARSessionDelegate, UIPopoverPresentati
                 current.x += width / 2
                 current.y += height / 2
 
-                print(angle)
                 mashAnchors = []
-                while current.x < end.x && current.y < end.y {
+                while current.x < end.x && ((height < 0 && current.y > end.y) || (height > 0 && current.y < end.y)) {
                     var simdTransform = simd_float4x4(newTransform)
                     
                     simdTransform.columns.3 = current
@@ -426,8 +439,6 @@ class ARViewController: UIViewController, ARSessionDelegate, UIPopoverPresentati
             end = temp
         }
         
-        print("start: \(start)")
-        print("end: \(end)")
         let originPoint = CGPoint(x: end.x - start.x, y: end.y - start.y)
         let bearingRadians = atan2f(Float(originPoint.y), Float(originPoint.x))
         var bearingDegrees = bearingRadians * (180.0 / .pi)
