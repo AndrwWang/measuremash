@@ -236,10 +236,9 @@ class CatalogViewController: UIViewController {
     
     @objc func buttonPressed(_ sender: UIButton) {
         let pairIndex = sender.tag - 1
-        let pair = Objects.pairs[pairIndex]
-        
+
         let arVC = navigationController!.viewControllers[navigationController!.viewControllers.count - 2] as! ARViewController
-        arVC.objectChosen(pair.key)
+        arVC.objectChosen(pairIndex)
         
         navigationController!.popViewController(animated: true)
     }

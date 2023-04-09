@@ -24,6 +24,7 @@
 		C283044F29E1114B00F4C83A /* UILabelExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C283044E29E1114B00F4C83A /* UILabelExtension.swift */; };
 		C283045229E115DB00F4C83A /* UIButtonExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C283045129E115DB00F4C83A /* UIButtonExtension.swift */; };
 		C2BFF8AE29E2730700E80144 /* Objects.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2BFF8AD29E2730700E80144 /* Objects.swift */; };
+		C2BFF8B029E2872F00E80144 /* DistanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2BFF8AF29E2872F00E80144 /* DistanceViewController.swift */; };
 		C2C02D3229E13C530093D565 /* OverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2C02D3129E13C530093D565 /* OverlayView.swift */; };
 		C2DD1A1029E21EB300B5B71C /* Mash.rcproject in Resources */ = {isa = PBXBuildFile; fileRef = C2DD1A0F29E21EB300B5B71C /* Mash.rcproject */; };
 /* End PBXBuildFile section */
@@ -67,6 +68,7 @@
 		C283044E29E1114B00F4C83A /* UILabelExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILabelExtension.swift; sourceTree = "<group>"; };
 		C283045129E115DB00F4C83A /* UIButtonExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButtonExtension.swift; sourceTree = "<group>"; };
 		C2BFF8AD29E2730700E80144 /* Objects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Objects.swift; sourceTree = "<group>"; };
+		C2BFF8AF29E2872F00E80144 /* DistanceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceViewController.swift; sourceTree = "<group>"; };
 		C2C02D3129E13C530093D565 /* OverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayView.swift; sourceTree = "<group>"; };
 		C2DD1A0F29E21EB300B5B71C /* Mash.rcproject */ = {isa = PBXFileReference; lastKnownFileType = file.rcproject; path = Mash.rcproject; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -125,6 +127,7 @@
 				01A55DA829E0FB1F008B5A04 /* AppDelegate.swift */,
 				C283044629E10AB800F4C83A /* WelcomeViewController.swift */,
 				01A55DAA29E0FB1F008B5A04 /* ARViewController.swift */,
+				C2BFF8AF29E2872F00E80144 /* DistanceViewController.swift */,
 				01A55DD729E121A4008B5A04 /* CatalogViewController.swift */,
 				C2C02D3129E13C530093D565 /* OverlayView.swift */,
 				01A55DAE29E0FB1F008B5A04 /* Main.storyboard */,
@@ -303,6 +306,7 @@
 				C2BFF8AE29E2730700E80144 /* Objects.swift in Sources */,
 				01A55DA929E0FB1F008B5A04 /* AppDelegate.swift in Sources */,
 				C283043F29E1041A00F4C83A /* UIFontExtension.swift in Sources */,
+				C2BFF8B029E2872F00E80144 /* DistanceViewController.swift in Sources */,
 				C283044729E10AB800F4C83A /* WelcomeViewController.swift in Sources */,
 				C283044F29E1114B00F4C83A /* UILabelExtension.swift in Sources */,
 				C283045229E115DB00F4C83A /* UIButtonExtension.swift in Sources */,

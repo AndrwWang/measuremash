@@ -35,6 +35,13 @@ class Objects {
         ImageDoublePair(image: UIImage(named: "couch")!, length: 200, name: "3-Person Couch", key: 8),
         ImageDoublePair(image: UIImage(named: "house")!, length: 550, name: "2-Story House", key: 9),
         ImageDoublePair(image: UIImage(named: "soccergoal")!, length: 732, name: "Soccer Goal", key: 10),
-        ImageDoublePair(image: UIImage(named: "fieldgoal")!, length: 1372, name: "Football Field Goal", key: 11),
+        ImageDoublePair(image: UIImage(named: "fieldgoal")!, length: 1372, name: "Field Goal", key: 11),
     ]
+    
+    enum UNIT {
+        case meters
+        case centimeters
+        case feet
+        case inches
+    }
 }

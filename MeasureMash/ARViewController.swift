@@ -9,19 +9,24 @@ import UIKit
 import RealityKit
 import ARKit
 import SpriteKit
+import Combine
 
-class ARViewController: UIViewController, ARSessionDelegate {
+class ARViewController: UIViewController, ARSessionDelegate, UIPopoverPresentationControllerDelegate {
     
     @IBOutlet weak var arView: ARView!
     private var overlayView: OverlayView!
     private var configuration: ARImageTrackingConfiguration!
-    private var distance: Double = 200
     
     private var morePointsLabel: UILabel!
     private var distanceLabel: UILabel!
     private var objectsLabel: UILabel!
     private var chooseButton: UIButton!
+    
     private var object = Objects.pairs[0]
+    private var displayDistance: Double = 0.1
+    private var distanceInMeters: Double = 0.1
+    private var numFit = 0
+    private var units: Objects.UNIT = .meters
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,6 +63,45 @@ class ARViewController: UIViewController, ARSessionDelegate {
         ])
     }
     
+    func updateObjectsLabel() {
+        var name = object.name.lowercased() + "s"
+        if name == "dies" { name = "dice" }
+        
+        let baseStr = "number of \(name) that can fit: \(numFit)"
+        let attrStr = NSMutableAttributedString(string: baseStr, attributes: [
+            NSAttributedString.Key.font : UIFont.systemFont(ofSize: Theme.SCREEN_HEIGHT / 45),
+            NSAttributedString.Key.foregroundColor : Theme.PINK! as UIColor
+        ]
+        )
+        attrStr.addAttribute(NSAttributedString.Key.foregroundColor, value: Theme.GOLD! as UIColor, range: NSRange(location: 10, length: name.count))
+        attrStr.addAttribute(NSAttributedString.Key.foregroundColor, value: Theme.GOLD! as UIColor, range: NSRange(location: baseStr.count - 2, length: 2))
+        
+        objectsLabel.attributedText = attrStr
+    }
+    
+    func updateDistanceLabel() {
+        var newStr = "distance: " + String(format: "%.2f", displayDistance) + " "
+        switch units {
+        case .meters:
+            newStr += "m"
+        case .centimeters:
+            newStr += "cm"
+        case .feet:
+            newStr += "ft"
+        case .inches:
+            newStr += "in"
+        }
+        
+        let attrStr = NSMutableAttributedString(string: newStr, attributes: [
+            NSAttributedString.Key.font : UIFont.systemFont(ofSize: Theme.SCREEN_HEIGHT / 40),
+            NSAttributedString.Key.foregroundColor : Theme.PINK! as UIColor
+        ]
+        )
+        attrStr.addAttribute(NSAttributedString.Key.foregroundColor, value: Theme.GOLD! as UIColor, range: NSRange(location:10,length:newStr.count - 10))
+        
+        distanceLabel.attributedText = attrStr
+    }
+    
     func configureBottomView() {
         var baseStr: String!
         var attrStr: NSMutableAttributedString!
@@ -86,7 +130,7 @@ class ARViewController: UIViewController, ARSessionDelegate {
             morePointsLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         distanceLabel = UILabel()
-        baseStr = "distance: " + String(format: "%.2f", distance) + " m"
+        baseStr = "distance: " + String(format: "%.2f", displayDistance) + " m"
         attrStr = NSMutableAttributedString(string: baseStr, attributes: [
             NSAttributedString.Key.font : UIFont.systemFont(ofSize: Theme.SCREEN_HEIGHT / 40),
             NSAttributedString.Key.foregroundColor : Theme.PINK! as UIColor
@@ -96,6 +140,8 @@ class ARViewController: UIViewController, ARSessionDelegate {
         
         distanceLabel.attributedText = attrStr
         distanceLabel.textAlignment = .center
+        distanceLabel.isUserInteractionEnabled = true
+        distanceLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(distanceLabelTapped)))
         view.addSubview(distanceLabel)
         
         objectsLabel = UILabel()
@@ -140,6 +186,47 @@ class ARViewController: UIViewController, ARSessionDelegate {
         ])
     }
     
+    @objc func distanceLabelTapped() {
+        if let vc = self.storyboard?.instantiateViewController(withIdentifier:"DistanceViewController") {
+            arView.session.pause()
+            
+            vc.modalTransitionStyle   = .coverVertical
+            vc.modalPresentationStyle = .popover
+            vc.popoverPresentationController?.sourceView = self.view
+            vc.popoverPresentationController?.sourceRect =
+            CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+            vc.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection(rawValue:0)
+            vc.popoverPresentationController?.delegate = self
+            
+            vc.preferredContentSize = CGSize(width: Theme.SCREEN_WIDTH * 3 / 4, height: Theme.SCREEN_HEIGHT / 3)
+            
+            (vc as! DistanceViewController).delegate = self
+            
+            self.present(vc, animated: true, completion: nil)
+        }
+    }
+    
+    func distancePopoverDismissed(distance: Double, units: Objects.UNIT) {
+        var computedDistance = distance
+        switch units {
+        case .meters:
+            break
+        case .centimeters:
+            computedDistance /= 100
+        case .feet:
+            computedDistance *= 0.3048
+        case .inches:
+            computedDistance = (computedDistance / 12) * 0.3048
+        }
+        
+        self.distanceInMeters = computedDistance
+        self.units = units
+        
+        updateDistanceLabel()
+        
+        arView.session.run(configuration)
+    }
+    
     func updateBottomView() {
         if overlayView.points.count < 2 {
             // not enough points, prompt user to pick more points
@@ -162,6 +249,9 @@ class ARViewController: UIViewController, ARSessionDelegate {
             distanceLabel.isHidden = false
             objectsLabel.isHidden = false
             morePointsLabel.isHidden = true
+            
+            updateDistanceLabel()
+            updateObjectsLabel()
         }
     }
     
@@ -173,8 +263,8 @@ class ARViewController: UIViewController, ARSessionDelegate {
     }
     
     //called from CatalogViewController
-    func objectChosen(_ key: Int) {
-        object = Objects.pairs[key - 1]
+    func objectChosen(_ index: Int) {
+        object = Objects.pairs[index]
     }
     
     var refImages: [ARReferenceImage] = []
@@ -222,6 +312,28 @@ class ARViewController: UIViewController, ARSessionDelegate {
         return realityFileSceneURL
     }
     
+    var streams = [Combine.AnyCancellable]()
+    func loadRealityComposerSceneAsync (filename: String,
+                                        fileExtension: String,
+                                        sceneName: String,
+                                        completion: @escaping (Swift.Result<(Entity & HasAnchoring)?, Swift.Error>) -> Void) {
+
+        guard let realityFileSceneURL = createRealityURL(filename: filename, fileExtension: fileExtension, sceneName: sceneName) else {
+            print("Error: Unable to find specified file in application bundle")
+            return
+        }
+
+        let loadRequest = Entity.loadAnchorAsync(contentsOf: realityFileSceneURL)
+        let cancellable = loadRequest.sink(receiveCompletion: { (loadCompletion) in
+            if case let .failure(error) = loadCompletion {
+                completion(.failure(error))
+            }
+        }, receiveValue: { (entity) in
+            completion(.success(entity))
+        })
+        cancellable.store(in: &streams)
+    }
+    
     var mashAnchors: [ARAnchor] = []
     func measureMash(anchor1 startAnchor: ARAnchor, anchor2 endAnchor: ARAnchor, angle: CGFloat, distanceInMeters: Double) {
         guard let realitySceneURL = createRealityURL(filename: "Mash",
@@ -229,61 +341,71 @@ class ARViewController: UIViewController, ARSessionDelegate {
                                                      sceneName: object.name) else {
             return
         }
-        let loadedScene = try! Entity.load(contentsOf: realitySceneURL)
-        var bounds = loadedScene.visualBounds(relativeTo: .none)
+        loadRealityComposerSceneAsync(filename: "Mash", fileExtension: "reality", sceneName: object.name, completion: { [self] result in
+            switch result {
+            case .success(let entity):
+                for m in mashAnchors { arView.session.remove(anchor: m) }
+                
+                var bounds = entity!.visualBounds(relativeTo: .none)
 
-        var current = startAnchor.transform.columns.3
-        var end = endAnchor.transform.columns.3
-        
-        //swap two points if necessary
-        if current.x > end.x {
-            let temp = current
-            current = end
-            end = temp
-        }
-        print("old width: \(bounds.max.x - bounds.min.x)")
-        
-        //scale the object
-        let objectToLineRatio = (object.length / 100) / distanceInMeters
-        let idealObjectWidth = objectToLineRatio * simd_distance(simd_double4(current), simd_double4(end))
-        let scale = idealObjectWidth / Double(bounds.max.x - bounds.min.x)
-        loadedScene.transform.scale *= Float(scale)
-        
-        //get rotation matrix
-        var newTransform = SCNMatrix4(startAnchor.transform)
-        let angleInRadians = Float(angle) * Float.pi / 180
-        let rotation = SCNMatrix4MakeRotation(angleInRadians, 0, 0, 1)
-        newTransform = SCNMatrix4Mult(newTransform, rotation)
+                var current = startAnchor.transform.columns.3
+                var end = endAnchor.transform.columns.3
+                
+                //swap two points if necessary
+                if current.x > end.x {
+                    let temp = current
+                    current = end
+                    end = temp
+                }
+                print("old width: \(bounds.max.x - bounds.min.x)")
+                
+                //scale the object
+                let objectToLineRatio = (object.length / 100) / distanceInMeters
+                let idealObjectWidth = objectToLineRatio * simd_distance(simd_double4(current), simd_double4(end))
+                let scale = idealObjectWidth / Double(bounds.max.x - bounds.min.x)
+                entity!.transform.scale *= Float(scale)
+                
+                //get rotation matrix
+                var newTransform = SCNMatrix4(startAnchor.transform)
+                let angleInRadians = Float(angle) * Float.pi / 180
+                let rotation = SCNMatrix4MakeRotation(angleInRadians, 0, 0, 1)
+                newTransform = SCNMatrix4Mult(newTransform, rotation)
 
-        //calculate rotated width and height
-        bounds = loadedScene.visualBounds(relativeTo: .none)
-        let width = (bounds.max.x - bounds.min.x) * (cos(angleInRadians))
-        let height = (bounds.max.x - bounds.min.x) * (sin(angleInRadians))
-        print("new width: \(width)")
-        print("new height: \(height)")
-        
-        
-        current.x += width / 2
-        current.y += height / 2
-        mashAnchors = []
-        while current.x < end.x {
-            var simdTransform = simd_float4x4(newTransform)
+                //calculate rotated width and height
+                bounds = entity!.visualBounds(relativeTo: .none)
+                let width = (bounds.max.x - bounds.min.x) * (cos(angleInRadians))
+                let height = (bounds.max.x - bounds.min.x) * (sin(angleInRadians))
+                print("new width: \(width)")
+                print("new height: \(height)")
+                
+                
+                current.x += width / 2
+                current.y += height / 2
+                mashAnchors = []
+                while current.x < end.x {
+                    var simdTransform = simd_float4x4(newTransform)
+                    
+                    simdTransform.columns.3 = current
+                    mashAnchors.append(ARAnchor(transform: simdTransform))
+                    
+                    current.x += width
+                    current.y += height
+                }
+                
+                numFit = mashAnchors.count
+                for m in mashAnchors {
+                    let anchorEntity = AnchorEntity(anchor: m)
+                    arView.session.add(anchor: m)
+                    
+                    let copy = entity!.clone(recursive: true)
+                    anchorEntity.addChild(copy)
+                    arView.scene.anchors.append(anchorEntity)
+                }
+            case .failure(let error):
+                print("failed to get entity")
+            }
             
-            simdTransform.columns.3 = current
-            mashAnchors.append(ARAnchor(transform: simdTransform))
-            
-            current.x += width
-            current.y += height
-        }
-
-        for m in mashAnchors {
-            let anchorEntity = AnchorEntity(anchor: m)
-            arView.session.add(anchor: m)
-            
-            let copy = loadedScene.clone(recursive: true)
-            anchorEntity.addChild(copy)
-            arView.scene.anchors.append(anchorEntity)
-        }
+        })
     }
     
     private func pointPairToBearingDegrees(startingPoint: CGPoint, secondPoint endingPoint: CGPoint) -> CGFloat {
@@ -330,14 +452,13 @@ class ARViewController: UIViewController, ARSessionDelegate {
         }
         
         if overlayView.points.count == 2 && delay % 30 == 0 {
-            for m in mashAnchors { arView.session.remove(anchor: m) }
             let degrees = pointPairToBearingDegrees(startingPoint: overlayView.points[0], secondPoint: overlayView.points[1])
             var finalAngle = Double(degrees.remainder(dividingBy: 180))
             if Int(degrees) / 180 > 0 {
                 finalAngle *= -1
             }
             
-            measureMash(anchor1: imageAnchors[0], anchor2: imageAnchors[1], angle: finalAngle, distanceInMeters: 100)
+            measureMash(anchor1: imageAnchors[0], anchor2: imageAnchors[1], angle: finalAngle, distanceInMeters: distanceInMeters)
             delay = 1
         } else {
             delay += 1
@@ -374,5 +495,9 @@ class ARViewController: UIViewController, ARSessionDelegate {
         let croppedImage = UIImage(cgImage: croppedCGImage!, scale: image.scale, orientation: image.imageOrientation)
         
         return croppedImage
+    }
+    
+    func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
+        return .none
     }
 }
