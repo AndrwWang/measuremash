@@ -213,39 +213,16 @@ class ARViewController: UIViewController, ARSessionDelegate {
         return realityFileSceneURL
     }
     
-    //method to test anchoring at points
-    var midpointAnchor: ARAnchor!
-    func addObjectAtMidpoint(anchor1 startAnchor: ARAnchor, anchor2 endAnchor: ARAnchor, angle: CGFloat) {
-        guard let realitySceneURL = createRealityURL(filename: "Mash",
-                                                     fileExtension: "reality",
-                                                     sceneName: "Scene 1") else {
-            return
-        }
-        let loadedScene = try! Entity.load(contentsOf: realitySceneURL)
-        var newTransform = SCNMatrix4(startAnchor.transform)
-
-        let rotation = SCNMatrix4MakeRotation(Float(angle) * Float.pi / 180, 0, 0, 1)
-        newTransform = SCNMatrix4Mult(newTransform, rotation)
-        
-        var simdTransform = simd_float4x4(newTransform)
-        simdTransform.columns.3 = 0.5 * (startAnchor.transform.columns.3 + endAnchor.transform.columns.3)
-
-        midpointAnchor = ARAnchor(transform: simdTransform)
-        let anchorEntity = AnchorEntity(anchor: midpointAnchor)
-        arView.session.add(anchor: midpointAnchor)
-        anchorEntity.addChild(loadedScene)
-        arView.scene.anchors.append(anchorEntity)
-    }
-    
     var mashAnchors: [ARAnchor] = []
     func measureMash(anchor1 startAnchor: ARAnchor, anchor2 endAnchor: ARAnchor, angle: CGFloat, distanceInMeters: Double) {
         guard let realitySceneURL = createRealityURL(filename: "Mash",
                                                      fileExtension: "reality",
-                                                     sceneName: "Scene 1") else {
+                                                     sceneName: "Pool Ball") else {
             return
         }
         var loadedScene = try! Entity.load(contentsOf: realitySceneURL)
-        let bounds = loadedScene.visualBounds(relativeTo: .none)
+        var test = loadedScene.findEntity(named: "ball")!
+        let bounds = test.visualBounds(relativeTo: .none)
 
         //get rotation matrix
         var newTransform = SCNMatrix4(startAnchor.transform)
@@ -284,7 +261,8 @@ class ARViewController: UIViewController, ARSessionDelegate {
             arView.session.add(anchor: m)
             
             loadedScene = try! Entity.load(contentsOf: realitySceneURL)
-            anchorEntity.addChild(loadedScene)
+            test = loadedScene.findEntity(named: "ball")!
+            anchorEntity.addChild(test)
             arView.scene.anchors.append(anchorEntity)
         }
     }
@@ -309,6 +287,7 @@ class ARViewController: UIViewController, ARSessionDelegate {
         return CGFloat(bearingDegrees)
     }
     
+    //delay rendering to reduce lag
     var delay = 0
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         var transformations: [CGPoint] = []
