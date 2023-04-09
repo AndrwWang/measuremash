@@ -59,11 +59,11 @@ class CatalogViewController: UIViewController {
         scrollView.contentSize = CGSize(width: scrollView.bounds.width, height: scrollViewHeight)
         
         
-        let sortLabelAttributes = NSAttributedString(string: "minimum", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: Theme.SCREEN_HEIGHT / 50), NSAttributedString.Key.foregroundColor : Theme.GOLD as Any])
+        let sortLabelAttributes = NSAttributedString(string: "minimum", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: Theme.SCREEN_HEIGHT / 50), NSAttributedString.Key.foregroundColor : Theme.GOLD as Any, NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue])
         sortButtonOutlet.setAttributedTitle(sortLabelAttributes, for: .normal)
         scrollView.addSubview(sortButtonOutlet)
         
-        let unitLabelAttributes = NSAttributedString(string: "centimeters", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: Theme.SCREEN_HEIGHT / 50), NSAttributedString.Key.foregroundColor : Theme.GOLD as Any])
+        let unitLabelAttributes = NSAttributedString(string: "centimeters", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: Theme.SCREEN_HEIGHT / 50), NSAttributedString.Key.foregroundColor : Theme.GOLD as Any, NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue])
         unitButtonOutlet.setAttributedTitle(unitLabelAttributes, for: .normal)
         scrollView.addSubview(unitButtonOutlet)
         
@@ -103,18 +103,18 @@ class CatalogViewController: UIViewController {
             if (unitType % 4 == 0) { //currently cm
                 let conversion = pair.length/100
                 label.text = pair.name + ":\n " + String(round(conversion*100)/100) + " m"
-                unitLabelAttributes = NSAttributedString(string: "meters", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: Theme.SCREEN_HEIGHT / 50), NSAttributedString.Key.foregroundColor : Theme.GOLD as Any])
+                unitLabelAttributes = NSAttributedString(string: "meters", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: Theme.SCREEN_HEIGHT / 50), NSAttributedString.Key.foregroundColor : Theme.GOLD as Any, NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue])
             } else if (unitType % 4 == 1) { //currently meters
                 let conversion = pair.length * 0.393701
                 label.text = pair.name + ":\n " + String(round(conversion*100)/100) + " in"
-                unitLabelAttributes = NSAttributedString(string: "inches", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: Theme.SCREEN_HEIGHT / 50), NSAttributedString.Key.foregroundColor : Theme.GOLD as Any])
+                unitLabelAttributes = NSAttributedString(string: "inches", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: Theme.SCREEN_HEIGHT / 50), NSAttributedString.Key.foregroundColor : Theme.GOLD as Any, NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue])
             } else if (unitType % 4 == 2) {
                 let conversion = pair.length * 0.0328
                 label.text = pair.name + ":\n " + String(round(conversion*100)/100) + " ft"
-                unitLabelAttributes = NSAttributedString(string: "feet", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: Theme.SCREEN_HEIGHT / 50), NSAttributedString.Key.foregroundColor : Theme.GOLD as Any])
+                unitLabelAttributes = NSAttributedString(string: "feet", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: Theme.SCREEN_HEIGHT / 50), NSAttributedString.Key.foregroundColor : Theme.GOLD as Any, NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue])
             } else {
                 label.text = pair.name + ":\n " + String(round(pair.length*100)/100) + " cm"
-                unitLabelAttributes = NSAttributedString(string: "centimeters", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: Theme.SCREEN_HEIGHT / 50), NSAttributedString.Key.foregroundColor : Theme.GOLD as Any])
+                unitLabelAttributes = NSAttributedString(string: "centimeters", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: Theme.SCREEN_HEIGHT / 50), NSAttributedString.Key.foregroundColor : Theme.GOLD as Any, NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue])
             }
             label.textAlignment = .center
             if (i % 2 == 1) {
@@ -158,7 +158,7 @@ class CatalogViewController: UIViewController {
                     label.removeFromSuperview()
                 }
             }
-            sortLabelAttributes = NSAttributedString(string: "minimum", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: Theme.SCREEN_HEIGHT / 50), NSAttributedString.Key.foregroundColor : Theme.GOLD as Any])
+            sortLabelAttributes = NSAttributedString(string: "minimum", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: Theme.SCREEN_HEIGHT / 50), NSAttributedString.Key.foregroundColor : Theme.GOLD as Any, NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue])
             minSort = false
             
         } else { //if button was max before
@@ -171,7 +171,7 @@ class CatalogViewController: UIViewController {
                     label.removeFromSuperview()
                 }
             }
-            sortLabelAttributes = NSAttributedString(string: "maximum", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: Theme.SCREEN_HEIGHT / 50), NSAttributedString.Key.foregroundColor : Theme.GOLD as Any])
+            sortLabelAttributes = NSAttributedString(string: "maximum", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: Theme.SCREEN_HEIGHT / 50), NSAttributedString.Key.foregroundColor : Theme.GOLD as Any, NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue])
             minSort = true
         }
        

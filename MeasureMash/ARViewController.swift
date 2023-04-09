@@ -18,7 +18,7 @@ class ARViewController: UIViewController, ARSessionDelegate, UIPopoverPresentati
     private var configuration: ARImageTrackingConfiguration!
     
     private var morePointsLabel: UILabel!
-    private var distanceLabel: UILabel!
+    private var distanceButton: UIButton!
     private var objectsLabel: UILabel!
     private var chooseButton: UIButton!
     
@@ -99,7 +99,7 @@ class ARViewController: UIViewController, ARSessionDelegate, UIPopoverPresentati
         )
         attrStr.addAttribute(NSAttributedString.Key.foregroundColor, value: Theme.GOLD! as UIColor, range: NSRange(location:10,length:newStr.count - 10))
         
-        distanceLabel.attributedText = attrStr
+        distanceButton.setAttributedTitle(attrStr, for: .normal)
     }
     
     func configureBottomView() {
@@ -129,7 +129,7 @@ class ARViewController: UIViewController, ARSessionDelegate, UIPopoverPresentati
             morePointsLabel.topAnchor.constraint(equalTo: arView.bottomAnchor),
             morePointsLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
-        distanceLabel = UILabel()
+        distanceButton = UIButton()
         baseStr = "distance: " + String(format: "%.2f", displayDistance) + " m"
         attrStr = NSMutableAttributedString(string: baseStr, attributes: [
             NSAttributedString.Key.font : UIFont.systemFont(ofSize: Theme.SCREEN_HEIGHT / 40),
@@ -138,11 +138,14 @@ class ARViewController: UIViewController, ARSessionDelegate, UIPopoverPresentati
         )
         attrStr.addAttribute(NSAttributedString.Key.foregroundColor, value: Theme.GOLD! as UIColor, range: NSRange(location:10,length:baseStr.count - 10))
         
-        distanceLabel.attributedText = attrStr
-        distanceLabel.textAlignment = .center
-        distanceLabel.isUserInteractionEnabled = true
-        distanceLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(distanceLabelTapped)))
-        view.addSubview(distanceLabel)
+        distanceButton.setAttributedTitle(attrStr, for: .normal)
+        distanceButton.setBackgroundColor(color: Theme.DARK_BLUE!, forState: .normal)
+        distanceButton.layer.borderWidth = 3
+        distanceButton.layer.cornerRadius = 15
+        distanceButton.layer.borderColor = Theme.PINK!.cgColor
+        distanceButton.clipsToBounds = true
+        distanceButton.addTarget(self, action: #selector(distanceButtonTapped), for: .touchUpInside)
+        view.addSubview(distanceButton)
         
         objectsLabel = UILabel()
         baseStr = "number of bananas that can fit: 30"
@@ -159,17 +162,17 @@ class ARViewController: UIViewController, ARSessionDelegate, UIPopoverPresentati
         view.addSubview(objectsLabel)
         
         chooseButton = UIButton()
-        let automatic = NSAttributedString(string: "choose object",
+        let choose = NSAttributedString(string: "choose object",
                                            attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: Theme.SCREEN_HEIGHT / 45),
                                                         NSAttributedString.Key.foregroundColor : UIColor.black])
-        chooseButton.setAttributedTitle(automatic, for: .normal)
+        chooseButton.setAttributedTitle(choose, for: .normal)
         chooseButton.setBackgroundColor(color: Theme.PINK!, forState: .normal)
         chooseButton.titleLabel!.textAlignment = .center
         chooseButton.layer.cornerRadius = 15
         chooseButton.addTarget(self, action: #selector(chooseButtonTapped), for: .touchUpInside)
         view.addSubview(chooseButton)
         
-        distanceLabel.translatesAutoresizingMaskIntoConstraints = false
+        distanceButton.translatesAutoresizingMaskIntoConstraints = false
         objectsLabel.translatesAutoresizingMaskIntoConstraints = false
         chooseButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -177,16 +180,16 @@ class ARViewController: UIViewController, ARSessionDelegate, UIPopoverPresentati
             chooseButton.heightAnchor.constraint(equalToConstant: Theme.SCREEN_HEIGHT / 35),
             chooseButton.widthAnchor.constraint(equalToConstant: Theme.SCREEN_WIDTH / 2),
             chooseButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            distanceLabel.topAnchor.constraint(equalTo: arView.bottomAnchor, constant: 10),
-            distanceLabel.widthAnchor.constraint(equalToConstant: Theme.SCREEN_WIDTH),
-            distanceLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            objectsLabel.topAnchor.constraint(equalTo: distanceLabel.bottomAnchor, constant: 10),
+            distanceButton.topAnchor.constraint(equalTo: arView.bottomAnchor, constant: 10),
+            distanceButton.widthAnchor.constraint(equalToConstant: Theme.SCREEN_WIDTH * 2 / 3),
+            distanceButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            objectsLabel.topAnchor.constraint(equalTo: distanceButton.bottomAnchor, constant: 10),
             objectsLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             objectsLabel.widthAnchor.constraint(equalToConstant: Theme.SCREEN_WIDTH)
         ])
     }
     
-    @objc func distanceLabelTapped() {
+    @objc func distanceButtonTapped() {
         if let vc = self.storyboard?.instantiateViewController(withIdentifier:"DistanceViewController") {
             arView.session.pause()
             
@@ -234,7 +237,7 @@ class ARViewController: UIViewController, ARSessionDelegate, UIPopoverPresentati
         if overlayView.points.count < 2 {
             // not enough points, prompt user to pick more points
             chooseButton.isHidden = true
-            distanceLabel.isHidden = true
+            distanceButton.isHidden = true
             objectsLabel.isHidden = true
             morePointsLabel.isHidden = false
             
@@ -249,7 +252,7 @@ class ARViewController: UIViewController, ARSessionDelegate, UIPopoverPresentati
         } else {
             // two points have been chosen, display information regarding the points
             chooseButton.isHidden = false
-            distanceLabel.isHidden = false
+            distanceButton.isHidden = false
             objectsLabel.isHidden = false
             morePointsLabel.isHidden = true
             
@@ -385,7 +388,7 @@ class ARViewController: UIViewController, ARSessionDelegate, UIPopoverPresentati
 
                 print(angle)
                 mashAnchors = []
-                while current.x < end.x {
+                while current.x < end.x && current.y < end.y {
                     var simdTransform = simd_float4x4(newTransform)
                     
                     simdTransform.columns.3 = current

@@ -14,9 +14,7 @@ class WelcomeViewController: UIViewController {
     @IBOutlet weak var logoImageView: UIImageView!
     @IBOutlet weak var descriptionLabel: UILabel!
     
-    @IBOutlet weak var optionsLabel: UILabel!
-    @IBOutlet weak var automaticButton: UIButton!
-    @IBOutlet weak var manualButton: UIButton!
+    @IBOutlet weak var mashButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,7 +28,7 @@ class WelcomeViewController: UIViewController {
     
     func setupLabels() {
         setupWelcomeSection()
-        setupOptionsSection()
+        setupMashButton()
     }
     
     func setupWelcomeSection() {
@@ -54,49 +52,33 @@ class WelcomeViewController: UIViewController {
             measureMashLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             logoImageView.topAnchor.constraint(equalTo: measureMashLabel.bottomAnchor, constant: 10),
+            logoImageView.widthAnchor.constraint(equalToConstant: Theme.SCREEN_WIDTH / 5),
+            logoImageView.heightAnchor.constraint(equalTo: logoImageView.widthAnchor),
             descriptionLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             descriptionLabel.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 20),
             descriptionLabel.widthAnchor.constraint(equalToConstant: Theme.SCREEN_WIDTH * 3 / 4)
         ])
     }
     
-    func setupOptionsSection() {
-        optionsLabel.translatesAutoresizingMaskIntoConstraints = false
-        manualButton.translatesAutoresizingMaskIntoConstraints = false
-        automaticButton.translatesAutoresizingMaskIntoConstraints = false
+    func setupMashButton() {
+        mashButton.translatesAutoresizingMaskIntoConstraints = false
         
-        optionsLabel.textColor = Theme.GOLD
-        optionsLabel.setFontSize(Theme.SCREEN_HEIGHT / 40)
-        
-        let automatic = NSAttributedString(string: "automatic",
-                                            attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: Theme.SCREEN_HEIGHT / 45),
+        let mash = NSAttributedString(string: "Mash!",
+                                            attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: Theme.SCREEN_HEIGHT / 40),
                                                          NSAttributedString.Key.foregroundColor : UIColor.black])
-        automaticButton.setAttributedTitle(automatic, for: .normal)
-        automaticButton.setBackgroundColor(color: Theme.PINK!, forState: .normal)
-        automaticButton.titleLabel!.textAlignment = .center
-        automaticButton.layer.cornerRadius = 15
-        
-        let manual = NSAttributedString(string: "manual",
-                                            attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: Theme.SCREEN_HEIGHT / 45),
-                                                         NSAttributedString.Key.foregroundColor : UIColor.black])
-        manualButton.setAttributedTitle(manual, for: .normal)
-        manualButton.setBackgroundColor(color: Theme.PINK!, forState: .normal)
-        manualButton.titleLabel!.textAlignment = .center
-        manualButton.layer.cornerRadius = 15
+        mashButton.setAttributedTitle(mash, for: .normal)
+        mashButton.setBackgroundColor(color: Theme.PINK!, forState: .normal)
+        mashButton.titleLabel!.textAlignment = .center
+        mashButton.layer.cornerRadius = 15
         
         NSLayoutConstraint.activate([
-            optionsLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            optionsLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            manualButton.topAnchor.constraint(equalTo: optionsLabel.bottomAnchor, constant: 10),
-            manualButton.leftAnchor.constraint(equalTo: view.centerXAnchor, constant: 10),
-            manualButton.widthAnchor.constraint(equalToConstant: Theme.SCREEN_WIDTH / 3.5),
-            automaticButton.widthAnchor.constraint(equalToConstant: Theme.SCREEN_WIDTH / 3.5),
-            automaticButton.topAnchor.constraint(equalTo: optionsLabel.bottomAnchor, constant: 10),
-            automaticButton.rightAnchor.constraint(equalTo: view.centerXAnchor, constant: -10)
+            mashButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            mashButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            mashButton.widthAnchor.constraint(equalToConstant: Theme.SCREEN_WIDTH / 3)
         ])
     }
     
-    @IBAction func manualButtonClicked(_ sender: UIButton) {
+    @IBAction func mashButtonClicked(_ sender: UIButton) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "ARViewController") as! ARViewController
 
