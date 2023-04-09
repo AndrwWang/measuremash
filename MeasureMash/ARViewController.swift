@@ -21,6 +21,7 @@ class ARViewController: UIViewController, ARSessionDelegate {
     private var distanceLabel: UILabel!
     private var objectsLabel: UILabel!
     private var chooseButton: UIButton!
+    private var object = Objects.pairs[0]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -165,7 +166,15 @@ class ARViewController: UIViewController, ARSessionDelegate {
     }
     
     @objc func chooseButtonTapped() {
-        print("hello worl;d")
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "CatalogViewController") as! CatalogViewController
+
+        navigationController!.pushViewController(vc, animated: true)
+    }
+    
+    //called from CatalogViewController
+    func objectChosen(_ key: Int) {
+        object = Objects.pairs[key - 1]
     }
     
     var refImages: [ARReferenceImage] = []
@@ -217,21 +226,11 @@ class ARViewController: UIViewController, ARSessionDelegate {
     func measureMash(anchor1 startAnchor: ARAnchor, anchor2 endAnchor: ARAnchor, angle: CGFloat, distanceInMeters: Double) {
         guard let realitySceneURL = createRealityURL(filename: "Mash",
                                                      fileExtension: "reality",
-                                                     sceneName: "Pool Ball") else {
+                                                     sceneName: object.name) else {
             return
         }
-        var loadedScene = try! Entity.load(contentsOf: realitySceneURL)
-        var test = loadedScene.findEntity(named: "ball")!
-        let bounds = test.visualBounds(relativeTo: .none)
-
-        //get rotation matrix
-        var newTransform = SCNMatrix4(startAnchor.transform)
-        let angleInRadians = Float(angle) * Float.pi / 180
-        let rotation = SCNMatrix4MakeRotation(angleInRadians, 0, 0, 1)
-        newTransform = SCNMatrix4Mult(newTransform, rotation)
-
-        let width = (bounds.max.x - bounds.min.x) * (cos(angleInRadians))
-        let height = (bounds.max.x - bounds.min.x) * (sin(angleInRadians))
+        let loadedScene = try! Entity.load(contentsOf: realitySceneURL)
+        var bounds = loadedScene.visualBounds(relativeTo: .none)
 
         var current = startAnchor.transform.columns.3
         var end = endAnchor.transform.columns.3
@@ -242,6 +241,27 @@ class ARViewController: UIViewController, ARSessionDelegate {
             current = end
             end = temp
         }
+        print("old width: \(bounds.max.x - bounds.min.x)")
+        
+        //scale the object
+        let objectToLineRatio = (object.length / 100) / distanceInMeters
+        let idealObjectWidth = objectToLineRatio * simd_distance(simd_double4(current), simd_double4(end))
+        let scale = idealObjectWidth / Double(bounds.max.x - bounds.min.x)
+        loadedScene.transform.scale *= Float(scale)
+        
+        //get rotation matrix
+        var newTransform = SCNMatrix4(startAnchor.transform)
+        let angleInRadians = Float(angle) * Float.pi / 180
+        let rotation = SCNMatrix4MakeRotation(angleInRadians, 0, 0, 1)
+        newTransform = SCNMatrix4Mult(newTransform, rotation)
+
+        //calculate rotated width and height
+        bounds = loadedScene.visualBounds(relativeTo: .none)
+        let width = (bounds.max.x - bounds.min.x) * (cos(angleInRadians))
+        let height = (bounds.max.x - bounds.min.x) * (sin(angleInRadians))
+        print("new width: \(width)")
+        print("new height: \(height)")
+        
         
         current.x += width / 2
         current.y += height / 2
@@ -260,9 +280,8 @@ class ARViewController: UIViewController, ARSessionDelegate {
             let anchorEntity = AnchorEntity(anchor: m)
             arView.session.add(anchor: m)
             
-            loadedScene = try! Entity.load(contentsOf: realitySceneURL)
-            test = loadedScene.findEntity(named: "ball")!
-            anchorEntity.addChild(test)
+            let copy = loadedScene.clone(recursive: true)
+            anchorEntity.addChild(copy)
             arView.scene.anchors.append(anchorEntity)
         }
     }
@@ -318,7 +337,7 @@ class ARViewController: UIViewController, ARSessionDelegate {
                 finalAngle *= -1
             }
             
-            measureMash(anchor1: imageAnchors[0], anchor2: imageAnchors[1], angle: finalAngle, distanceInMeters: 200)
+            measureMash(anchor1: imageAnchors[0], anchor2: imageAnchors[1], angle: finalAngle, distanceInMeters: 100)
             delay = 1
         } else {
             delay += 1

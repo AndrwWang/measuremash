@@ -8,35 +8,6 @@
 import UIKit
 
 class CatalogViewController: UIViewController {
-    // Create a custom object called "ImageDoublePair" that contains an image and a double property
-    class ImageDoublePair {
-        var image: UIImage
-        var length: Double
-        var name: String
-        var key: Int
-        
-        init(image: UIImage, length: Double, name: String, key: Int) {
-            self.image = image
-            self.length = length
-            self.name = name
-            self.key = key
-        }
-    }
-    // Create an array of ImageDoublePair objects
-    var pairs = [
-        ImageDoublePair(image: UIImage(named: "dice")!, length: 1.6, name: "Dice", key: 1),
-        ImageDoublePair(image: UIImage(named: "poolball")!, length: 6, name: "Pool Ball", key: 2),
-        ImageDoublePair(image: UIImage(named: "sodacan")!, length: 12, name: "Soda Can", key: 3),
-        ImageDoublePair(image: UIImage(named: "basketball")!, length: 24, name: "Basketball", key: 4),
-        ImageDoublePair(image: UIImage(named: "pizza")!, length: 33, name: "Pizza Slice", key: 5),
-        ImageDoublePair(image: UIImage(named: "baseballbat")!, length: 84, name: "Baseball Bat", key: 6),
-        ImageDoublePair(image: UIImage(named: "poolstick")!, length: 146, name: "Pool Cue", key: 7),
-        ImageDoublePair(image: UIImage(named: "couch")!, length: 200, name: "3-Person Couch", key: 8),
-        ImageDoublePair(image: UIImage(named: "house")!, length: 550, name: "2-Story House", key: 9),
-        ImageDoublePair(image: UIImage(named: "soccergoal")!, length: 732, name: "Soccer Goal", key: 10),
-        ImageDoublePair(image: UIImage(named: "fieldgoal")!, length: 1372, name: "Football Field Goal", key: 11),
-    ]
-    
     var minSort = false
     var scrollViewHeight: CGFloat = 0.0
     var unitType = 0
@@ -48,8 +19,8 @@ class CatalogViewController: UIViewController {
         view.backgroundColor = Theme.DARK_BLUE
         
         //displaying imageviews
-        for i in 1..<(pairs.count+1) {
-            let pair = pairs[i - 1]
+        for i in 1..<(Objects.pairs.count+1) {
+            let pair = Objects.pairs[i - 1]
             let imageView = UIImageView(image: pair.image)
             let label = UILabel()
             let button = UIButton()
@@ -59,7 +30,7 @@ class CatalogViewController: UIViewController {
                                                 attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: Theme.SCREEN_HEIGHT / 45),
                                                              NSAttributedString.Key.foregroundColor : UIColor.black])
             button.setAttributedTitle(buttonAttributes, for: .normal)
-            button.setBackgroundColor(color: Theme.LIGHT_BROWN!, forState: .normal)
+            button.setBackgroundColor(color: Theme.PINK!, forState: .normal)
             button.titleLabel!.textAlignment = .center
             button.layer.cornerRadius = 15
             
@@ -76,7 +47,7 @@ class CatalogViewController: UIViewController {
                 button.frame = CGRect(x: 255, y: (i-1) * 120 + 155, width: 80, height: 40)
                 
             }
-            if (i == pairs.count) {
+            if (i == Objects.pairs.count) {
                 scrollViewHeight = CGFloat((i-1) * 120 + 500)
             }
             label.textColor = Theme.GOLD
@@ -112,8 +83,8 @@ class CatalogViewController: UIViewController {
         scrollView.subviews.forEach({ $0.removeFromSuperview() })
         var unitLabelAttributes: NSAttributedString
         
-        for i in 1..<(pairs.count+1) {
-            let pair = pairs[i - 1]
+        for i in 1..<(Objects.pairs.count+1) {
+            let pair = Objects.pairs[i - 1]
             let imageView = UIImageView(image: pair.image)
             let label = UILabel()
             label.numberOfLines = 2
@@ -125,7 +96,7 @@ class CatalogViewController: UIViewController {
                                                 attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: Theme.SCREEN_HEIGHT / 45),
                                                              NSAttributedString.Key.foregroundColor : UIColor.black])
             button.setAttributedTitle(buttonAttributes, for: .normal)
-            button.setBackgroundColor(color: Theme.LIGHT_BROWN!, forState: .normal)
+            button.setBackgroundColor(color: Theme.PINK!, forState: .normal)
             button.titleLabel!.textAlignment = .center
             button.layer.cornerRadius = 15
             
@@ -155,7 +126,7 @@ class CatalogViewController: UIViewController {
                 label.frame = CGRect(x: 220, y: (i-1) * 120 + 90, width: 150, height: 70)
                 button.frame = CGRect(x: 255, y: (i-1) * 120 + 155, width: 80, height: 40)
             }
-            if (i == pairs.count) {
+            if (i == Objects.pairs.count) {
                 scrollViewHeight = CGFloat((i-1) * 100 + 500)
             }
             unitButtonOutlet.setAttributedTitle(unitLabelAttributes, for: .normal)
@@ -178,7 +149,7 @@ class CatalogViewController: UIViewController {
         var sortLabelAttributes: NSAttributedString
         
         if (minSort) { //if button was min before
-            pairs = pairs.sorted(by: { $0.length < $1.length })
+            Objects.pairs = Objects.pairs.sorted(by: { $0.length < $1.length })
             for subview in view.subviews {
                 if let imageView = subview as? UIImageView {
                     imageView.removeFromSuperview()
@@ -191,7 +162,7 @@ class CatalogViewController: UIViewController {
             minSort = false
             
         } else { //if button was max before
-            pairs = pairs.sorted(by: { $0.length > $1.length })
+            Objects.pairs = Objects.pairs.sorted(by: { $0.length > $1.length })
             for subview in view.subviews {
                 if let imageView = subview as? UIImageView {
                     imageView.removeFromSuperview()
@@ -208,8 +179,8 @@ class CatalogViewController: UIViewController {
         scrollView.addSubview(sortButtonOutlet)
         
         //displaying imageviews
-        for i in 1..<(pairs.count+1) {
-            let pair = pairs[i - 1]
+        for i in 1..<(Objects.pairs.count+1) {
+            let pair = Objects.pairs[i - 1]
             let imageView = UIImageView(image: pair.image)
             let label = UILabel()
             label.numberOfLines = 2
@@ -220,7 +191,7 @@ class CatalogViewController: UIViewController {
                                                 attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: Theme.SCREEN_HEIGHT / 45),
                                                              NSAttributedString.Key.foregroundColor : UIColor.black])
             button.setAttributedTitle(buttonAttributes, for: .normal)
-            button.setBackgroundColor(color: Theme.LIGHT_BROWN!, forState: .normal)
+            button.setBackgroundColor(color: Theme.PINK!, forState: .normal)
             button.titleLabel!.textAlignment = .center
             button.layer.cornerRadius = 15
             
@@ -246,7 +217,7 @@ class CatalogViewController: UIViewController {
                 label.frame = CGRect(x: 220, y: (i-1) * 120 + 90, width: 150, height: 70)
                 button.frame = CGRect(x: 255, y: (i-1) * 120 + 155, width: 80, height: 40)
             }
-            if (i == pairs.count) {
+            if (i == Objects.pairs.count) {
                 scrollViewHeight = CGFloat((i-1) * 100 + 500)
             }
             label.textColor = Theme.GOLD
@@ -265,9 +236,12 @@ class CatalogViewController: UIViewController {
     
     @objc func buttonPressed(_ sender: UIButton) {
         let pairIndex = sender.tag - 1
-        let pair = pairs[pairIndex]
-        print(pair.key)
-        //performSegue(withIdentifier: "showNewScreen", sender: pair)
+        let pair = Objects.pairs[pairIndex]
+        
+        let arVC = navigationController!.viewControllers[navigationController!.viewControllers.count - 2] as! ARViewController
+        arVC.objectChosen(pair.key)
+        
+        navigationController!.popViewController(animated: true)
     }
     
     func polishLabels() {
@@ -283,9 +257,9 @@ class CatalogViewController: UIViewController {
         unitButtonOutlet.frame = CGRect(x: 230, y: 15, width: 120 , height: 70)
         
         sortLabel.text = "sort by\t\t\t\t in"
-        titleLabel.textColor = Theme.LIGHT_BROWN
+        titleLabel.textColor = Theme.PINK
         titleLabel.setFontSize(Theme.SCREEN_HEIGHT/40)
-        sortLabel.textColor = Theme.LIGHT_BROWN
+        sortLabel.textColor = Theme.PINK
         sortLabel.setFontSize(Theme.SCREEN_HEIGHT/50)
         sortButtonOutlet.setTitleColor(Theme.GOLD, for: .normal)
         unitButtonOutlet.setTitleColor(Theme.GOLD, for: .normal)
