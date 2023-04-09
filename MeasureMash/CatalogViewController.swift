@@ -43,7 +43,7 @@ class CatalogViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(hex: "#176087")
+        view.backgroundColor = Theme.DARK_BLUE
 
         // Do any additional setup after loading the view.
         

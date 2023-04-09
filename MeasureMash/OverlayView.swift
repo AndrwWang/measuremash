@@ -25,7 +25,7 @@ class OverlayView: UIView {
                 layer.removeFromSuperlayer()
             }
         }
-        
+
         for p in points {
             drawDot(location: p)
         }

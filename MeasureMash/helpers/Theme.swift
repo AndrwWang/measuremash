@@ -9,7 +9,7 @@ import UIKit
 
 class Theme {
     static let DARK_BLUE = UIColor(hex: "#176087")
-    static let LIGHT_BROWN = UIColor(hex: "#D3AB9E")
+    static let PINK = UIColor(hex: "#D3AB9E")
     static let GOLD = UIColor(hex: "#EAD795")
     
     static let SCREEN_WIDTH: CGFloat = UIScreen.main.bounds.size.width

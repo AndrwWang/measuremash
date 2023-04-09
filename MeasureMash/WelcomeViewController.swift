@@ -21,7 +21,7 @@ class WelcomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = UIColor(hex: "#176087")
+        view.backgroundColor = Theme.DARK_BLUE
         
         setupLabels()
     }
@@ -40,7 +40,7 @@ class WelcomeViewController: UIViewController {
         logoImageView.translatesAutoresizingMaskIntoConstraints = false
         
         welcomeLabel.textColor = Theme.GOLD
-        measureMashLabel.textColor = Theme.LIGHT_BROWN
+        measureMashLabel.textColor = Theme.PINK
         descriptionLabel.textColor = Theme.GOLD
         
         welcomeLabel.setFontSize(Theme.SCREEN_HEIGHT / 30)
@@ -72,7 +72,7 @@ class WelcomeViewController: UIViewController {
                                             attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: Theme.SCREEN_HEIGHT / 45),
                                                          NSAttributedString.Key.foregroundColor : UIColor.black])
         automaticButton.setAttributedTitle(automatic, for: .normal)
-        automaticButton.setBackgroundColor(color: Theme.LIGHT_BROWN!, forState: .normal)
+        automaticButton.setBackgroundColor(color: Theme.PINK!, forState: .normal)
         automaticButton.titleLabel!.textAlignment = .center
         automaticButton.layer.cornerRadius = 15
         
@@ -80,7 +80,7 @@ class WelcomeViewController: UIViewController {
                                             attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: Theme.SCREEN_HEIGHT / 45),
                                                          NSAttributedString.Key.foregroundColor : UIColor.black])
         manualButton.setAttributedTitle(manual, for: .normal)
-        manualButton.setBackgroundColor(color: Theme.LIGHT_BROWN!, forState: .normal)
+        manualButton.setBackgroundColor(color: Theme.PINK!, forState: .normal)
         manualButton.titleLabel!.textAlignment = .center
         manualButton.layer.cornerRadius = 15
         
