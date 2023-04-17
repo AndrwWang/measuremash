@@ -8,7 +8,7 @@ The Empire State Building is about 1250 feet tall. An American football field is
 
 ## Overview
 
-MeasureMash is an iOS mobile application that runs on Apple's very own *ARKit*, a powerful augmented reality platform. The app utilizes image anchors to track points in the real world and create a chain of fun objects such as houses, pool balls, and soccer goals from one endpoint to another. Users can tap the view, set the real-world distance that the resulting line segment represents, choose an everyday object, and let MeasureMash handle all the calculations and visualization.
+MeasureMash is an iOS mobile application that runs on Apple's *ARKit*, a powerful augmented reality platform. The app utilizes image anchors to track points in the real world and create a chain of fun objects such as houses, pool balls, and soccer goals from one endpoint to another. Users can tap the view, set the real-world distance that the resulting line segment represents, choose an everyday object, and let MeasureMash handle all the scaling and visualization.
 
 ## Innovation
 
